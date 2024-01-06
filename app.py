@@ -1,3 +1,4 @@
+import ask
 import datetime
 import os.path
 
@@ -36,77 +37,113 @@ def main():
       token.write(creds.to_json())
 
   title = input("Event Title: ")
-          
-  startYear, startMth, startDay, startHr, startMin, startS = [0, 0, 0, 0, 0, 0]
-  endYear, endMth, endDay, endHr, endMin, endS = [0, 0, 0, 0, 0, 0]
 
+  startYear, startMth, startDay, endYear, endMth, endDay = [0, 0, 0, 0, 0, 0]
+  startHr, startMin, startS, endHr, endMin, endS = [-1, -1, -1, -1, -1, -1]
+
+  # Check Start Date
   # Check valid year
   while startYear < 2024 or startYear > 2100:
-      while True:
-          try:
-              startYear = int(input("Enter a valid start year: "))
-              break
-          except:
-              continue
+    startYear = ask.askStartYr()
   # Check valid month i.e. between 1-12
   while startMth not in range(1, 13):
-      while True:
-          try:
-              startMth = int(input("Enter a valid start month: "))
-              break
-          except:
-              continue
+    startMth = ask.askStartMth()
   # Check months with 31 days
   if startMth in [1, 3, 5, 7, 8, 10, 12]:
-      while startDay not in range(1, 32):
-          while True:
-              try:
-                  startDay = int(input("Enter a valid start day: "))
-                  break
-              except:
-                  continue
+    while startDay not in range(1, 32):
+      startDay = ask.askStartDay()
   # Check months with 30 days
   elif startMth in [4, 6, 9, 11]:
-      while startDay not in range(1, 31):
-          while True:
-              try:
-                  startDay = int(input("Enter a valid start day: "))
-                  break
-              except:
-                  continue
+    while startDay not in range(1, 31):
+      startDay = ask.askStartDay()
   # Check February
   elif startMth == 2:
-      # Leap years are divisible by 4
-      if startYear % 4 == 0:
-          while startDay not in range(1, 30):
-              while True:
-                  try:
-                      startDay = int(input("Enter a valid start day: "))
-                      break
-                  except:
-                      continue
-      else:
-          while startDay not in range(1, 29):
-              while True:
-                  try:
-                      startDay = int(input("Enter a valid start day: "))
-                      break
-                  except:
-                      continue
-  
+    # Leap years are divisible by 4
+    if startYear % 4 == 0:
+      while startDay not in range(1, 30):
+        startDay = ask.askStartDay()
+    else:
+      while startDay not in range(1, 29):
+        startDay = ask.askStartDay()
+
+  # Check Start Time
+  # Check valid hour
+  while startHr not in range(0, 24):
+    startHr = ask.askStartHr()
+  # Check valid min
+  while startMin not in range(0, 60):
+    startMin = ask.askStartMin()
+  # Check valid sec
+  while startS not in range(0, 60):
+    startS = ask.askStartS()
+
+  # Check End Date
+  # Check valid year
+  while endYear < 2024 or endYear > 2100:
+    endYear = ask.askEndYr()
+  # Check valid month i.e. between 1-12
+  while endMth not in range(1, 13):
+    endMth = ask.askEndMth()
+  # Check months with 31 days
+  if endMth in [1, 3, 5, 7, 8, 10, 12]:
+    while endDay not in range(1, 32):
+      endDay = ask.askEndDay()
+  # Check months with 30 days
+  elif endMth in [4, 6, 9, 11]:
+    while endDay not in range(1, 31):
+      endDay = ask.askEndDay()
+  # Check February
+  elif endMth == 2:
+    # Leap years are divisible by 4
+    if endYear % 4 == 0:
+      while endDay not in range(1, 30):
+        endDay = ask.askEndDay()
+    else:
+      while endDay not in range(1, 29):
+        endDay = ask.askEndDay()
+
+  # Check End Time
+  # Check valid hour
+  while endHr not in range(0, 24):
+    endHr = ask.askEndHr()
+  # Check valid min
+  while endMin not in range(0, 60):
+    endMin = ask.askEndMin()
+  # Check valid sec
+  while endS not in range(0, 60):
+    endS = ask.askEndS()
+              
   startDate = str(startYear) + "-" + str(startMth) + "-" + str(startDay)
+  startTime = str(startHr) + ":" + str(startMin) + ":" + str(startS)
+
+  endDate = str(endYear) + "-" + str(endMth) + "-" + str(endDay)
+  endTime = str(endHr) + ":" + str(endMin) + ":" + str(endS)
 
   event = {
     "summary": f"{title}",
 
     "start": {
-      "dateTime": f"{startDate}T10:00:00",
+      "dateTime": f"{startDate}T{startTime}",
       "timeZone": "Asia/Singapore"
     },
 
     "end": {
-      "dateTime": "2024-01-11T10:00:00",
+      "dateTime": f"{endDate}T{endTime}",
       "timeZone": "Asia/Singapore"
+    },
+
+    "reminders": {
+      "useDefault": "False",
+      "overrides": [
+        {
+          "method": "popup",
+          "minutes": "360"
+        },
+        {
+          "method" : "popup",
+          "minutes": "180"
+        }
+      ]
     }
   }
 
