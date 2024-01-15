@@ -1,5 +1,4 @@
 import datetime as dt
-import tkinter as tk
 
 def is_valid_date(date_string):
     try:
