@@ -1,8 +1,9 @@
 import datetime as dt
+import tkinter as tk
 
 def is_valid_date(date_string):
     try:
-        dt.datetime.strptime(date_string, '%Y-%m-%d')
+        dt.datetime.strptime(date_string, '%d/%m/%Y')
         return True
     except ValueError:
         return False
@@ -15,7 +16,7 @@ def is_valid_time(time_string):
     except ValueError:
         return False  # Time is invalid
     
-def convert_date_format(date_input):
+def convert_date(date_input):
     # Convert input to datetime object
     date_object = dt.datetime.strptime(date_input, "%d/%m/%Y")
     
@@ -23,3 +24,9 @@ def convert_date_format(date_input):
     converted_date = date_object.strftime("%Y-%m-%d")
     
     return converted_date
+
+def convert_time(time_input):
+
+    converted_time = time_input[:2] + ':' + time_input[2:] + ':00'
+
+    return converted_time
